@@ -4,6 +4,11 @@ A **phone-first**, self-hosted experiment based on Fabrice Bellard's TinyEMU/JSL
 No account is required to *use* the deployed app; no remote Linux server is involved.
 A GitHub account is required if you choose to deploy it with GitHub Pages.
 
+**Live app:** https://rainierraoul.github.io/pocketlinux/
+
+Open the link in Safari on your iPhone. To install it, use **Share → Add to Home Screen**.
+The instructions below are for creating another deployment.
+
 **What this version actually does:** It packages Bellard's public **2019 precompiled
 JSLinux RISC-V demo** alongside an iPhone-friendly launcher, touchscreen control keys,
 a simple command input, an installable web-app manifest, and an opt-in offline asset cache.
@@ -87,9 +92,9 @@ but has not been tested on an iPhone in this project.
 ## Trust and security
 
 The deployment downloads third-party executable WebAssembly and guest software.
-For a supply-chain-hardened build, set `BELLARD_ARCHIVE_SHA256` to a verified SHA-256
-before publishing. This starter leaves it unset because the archive's digest could
-not be checked during creation. Do not type passwords, sensitive credentials or
+The build verifies the official archive against SHA-256
+`c57e46f8eab6656cd9ce5c7e2825230177919b147c8c2befd1f327bbdf254088`.
+Set `BELLARD_ARCHIVE_SHA256` explicitly when intentionally changing the upstream archive. Do not type passwords, sensitive credentials or
 private information into an experimental guest. The app does not intentionally send
 terminal input to a remote backend. The GitHub Pages server serves static files.
 
@@ -118,11 +123,17 @@ python3 -m http.server --directory public 8000
 Open http://localhost:8000/. **Do not open `index.html` as a `file://` URL**;
 WebAssembly and VM disk block loading require a web server.
 
-## Tests performed on the starter project
+## Deployment verification — 24 October 2026
 
-- JavaScript syntax validation via Node
-- Python and shell script syntax checks
-- Static manifest/asset and required-file checker using synthetic fixtures
+- The GitHub Actions workflow built the real upstream archive, verified all 65 asset
+  references (27.3 MiB), and deployed successfully to GitHub Pages.
+- An actual Chromium browser loaded the public deployment and booted Linux to its
+  BusyBox shell. `uname -a` reported Linux 4.15.0 on riscv64.
+- The launcher's command field successfully ran `uname -a`, printed
+  `POCKETLINUX_BOOT_OK`, and wrote and read `hello` in `/tmp/pocketlinux-test`.
+- **Save offline** completed and reported that the emulator assets were cached.
+- JavaScript and shell syntax checks passed locally.
 
-An actual Safari boot, iPhone performance, persistence, and the remote archive
-retrieval remain **unverified in this environment**.
+Safari on a physical iPhone, performance compared with iSH/UTM SE, and a fresh
+launch with the network disconnected have not been tested. Guest filesystem
+changes remain temporary across restarts.
