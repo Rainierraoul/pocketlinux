@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101717">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pocket Linux">
+  <meta name="description" content="Local RISC-V Linux running through Bellard's TinyEMU in WebAssembly">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="app.css">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>Pocket Linux · TinyEMU</title>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="identity"><span class="status-dot" aria-hidden="true"></span><span class="heading">POCKET<span class="accent">LINUX</span></span><span class="subheading">RISC-V / TINYEMU</span></div>
+      <button type="button" id="reset" class="subtle" title="Restart the Linux virtual machine">Restart</button>
+    </header>
+    <section class="terminal-frame" aria-label="Linux terminal">
+      <div class="terminal-header"><span>tty0</span><span id="vm-status" aria-live="polite">Preparing VM…</span></div>
+      <iframe id="vm" title="TinyEMU Linux console" referrerpolicy="same-origin" allow="clipboard-read; clipboard-write"></iframe>
+    </section>
+    <section class="toolbar" aria-label="Mobile terminal controls">
+      <div class="keys" id="keys">
+        <button type="button" data-send="\u001b">ESC</button>
+        <button type="button" data-send="\t">TAB</button>
+        <button type="button" data-ctrl="c">^C</button>
+        <button type="button" data-ctrl="d">^D</button>
+        <button type="button" data-ctrl="l">^L</button>
+        <button type="button" data-send="\u001b[A" aria-label="Up arrow">↑</button>
+        <button type="button" data-send="\u001b[D" aria-label="Left arrow">←</button>
+        <button type="button" data-send="\u001b[B" aria-label="Down arrow">↓</button>
+        <button type="button" data-send="\u001b[C" aria-label="Right arrow">→</button>
+      </div>
+      <form id="command-form" class="command-form" autocomplete="off">
+        <label class="visually-hidden" for="command">Linux command</label>
+        <input id="command" type="text" enterkeyhint="send" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Type a command…" />
+        <button type="submit" class="send" title="Send command and Enter">Send ↵</button>
+      </form>
+      <div class="settings">
+        <span id="notice" role="status">Linux executes on this device. Guest changes are not yet persistent.</span>
+        <button type="button" id="offline" class="subtle">Save offline</button>
+      </div>
+      <progress id="download-progress" value="0" max="100" hidden></progress>
+    </section>
+  </main>
+  <script src="app.js" defer></script>
+</body>
+</html>
